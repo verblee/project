@@ -16,7 +16,19 @@ app.get("/", function(req,res){
 });
 
 app.get("/api/contacts", function(req,res){
-  knex('contacts')
+  knex('users').join('contacts', 'users.id', 'contacts.user_id')
+    .where('users.id', 1)
+    .then((data) => {
+      res.send(data)
+    })
+});
+
+app.post("/api/contacts", function(req,res){
+  knex('contacts').insert({
+    firstname: req.body.firstname,
+    phone: req.body.phone,
+    user_id: 1
+    })
     .then((data) => {
       res.send(data)
     })
